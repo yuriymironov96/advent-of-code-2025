@@ -28,20 +28,26 @@ def part_one():
 
 
 def part_two():
+    # https://www.reddit.com/r/adventofcode/comments/1pb3y8p/comment/nrs8mls/
     current_position = 50
     current_counter_state = 0
     for row in read_input():
         row = row.replace("\n", "")
         effective_step = get_effective_step(row)
-        if abs(effective_step) // 100 > 0:
-            diff = abs(effective_step) // 100
-            if 0 < effective_step < 100:
-                diff -= 1
-            current_counter_state += diff
-        next_position = (current_position + effective_step) % 100
-        if current_position + effective_step not in range(1, 100) and current_position != 0:
+
+        prev_current = current_position
+        current_counter_state += int(abs(effective_step) / 100)
+        current_position = (current_position + effective_step) % 100
+        if prev_current != 0 and current_position != 0:
+            if (
+                (effective_step < 0 and current_position > prev_current)
+                or effective_step > 0
+                and current_position < prev_current
+            ):
+                current_counter_state += 1
+        if current_position == 0:
             current_counter_state += 1
-        current_position = next_position
+
         print(
             f"after spinning {row}, position is {current_position} and counter state is {current_counter_state}"
         )
