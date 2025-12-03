@@ -2,7 +2,7 @@ from typing import Generator
 
 
 def read_input() -> Generator[str]:
-    for row in open("example.txt", "r"):
+    for row in open("input.txt", "r"):
         yield row.replace("\n", "")
 
 
@@ -33,33 +33,24 @@ def task_one():
     print(f"total joltage: {total_joltage}")
 
 
-def get_largest_joltage_two(bank: str, look_before_depth: int = 12) -> str:
-
+def get_largest_joltage_two(bank: str, look_before_depth: int = 11) -> str:
+    print(f"bank {bank}, look_before_depth {look_before_depth}")
     searchable_part_of_string = bank[:len(bank)-look_before_depth]
-    if not len(searchable_part_of_string):
+    print(f"searchable_part_of_string {searchable_part_of_string}")
+    if not len(searchable_part_of_string) or look_before_depth < 0:
         return ""
     max_char_pos = 0
     for idx, char in enumerate(searchable_part_of_string):
         if int(char) > int(searchable_part_of_string[max_char_pos]):
             max_char_pos = idx
-    return searchable_part_of_string[max_char_pos] + get_largest_joltage_two(bank[max_char_pos:], look_before_depth-1)
-    # # if bank == "811111111111119":
-    # #     import pdb;pdb.set_trace()
-    # # bank = list(bank_str)
-    # max_char_pos = 0
-    # for idx, char in enumerate(bank[:-1]):
-    #     if int(char) > int(bank[max_char_pos]):
-    #         max_char_pos = idx
-    # second_largest_char_pos = max_char_pos + 1
-    # for idx, char in enumerate(bank[max_char_pos + 1 :]):
-    #     if int(char) > int(bank[second_largest_char_pos]):
-    #         second_largest_char_pos = idx + max_char_pos + 1
+    print(f"max char is {searchable_part_of_string[max_char_pos]}")
+    return searchable_part_of_string[max_char_pos] + get_largest_joltage_two(bank[max_char_pos+1:], look_before_depth-1)
 
-    # return bank[max_char_pos] + get_largest_joltage_recursive()
 
 def task_two():
     total_joltage = 0
     for bank in read_input():
+        print(f"pricessing bank {bank}...")
         largest_joltage = get_largest_joltage_two(bank)
 
         total_joltage += int(largest_joltage)
